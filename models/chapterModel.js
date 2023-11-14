@@ -91,6 +91,20 @@ chapterSchema.pre(/^find/, function (next) {
   next();
 });
 
+chapterSchema.virtual("UserProgress", {
+  ref: "Progress",
+  foreignField: "chapterId",
+  localField: "_id",
+});
+
+chapterSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "UserProgress",
+    select: "isCompleted userId",
+  });
+  next();
+});
+
 const Chapter = mongoose.model("Chapter", chapterSchema);
 
 module.exports = Chapter;
