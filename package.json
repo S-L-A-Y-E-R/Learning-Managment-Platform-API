@@ -11,6 +11,7 @@
   "author": "Ahmed Ashraf",
   "license": "ISC",
   "dependencies": {
+    "@mux/mux-node": "^7.3.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -21,6 +22,7 @@
     "mongoose": "^8.0.0",
     "morgan": "^1.10.0",
     "stripe": "^14.4.0",
+    "uploadthing": "^5.7.4",
     "validator": "^13.11.0",
     "xss-clean": "^0.1.4"
   },

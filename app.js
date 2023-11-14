@@ -7,10 +7,13 @@ const hpp = require("hpp");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const compression = require("compression");
+const { createUploadthingExpressHandler } = require("uploadthing/express");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
+const uploadRouter = require("./utils/uploadthing");
 const courseRouter = require("./routes/courseRoutes");
 const chapterRouter = require("./routes/chapterRoutes");
+const attachmentRouter = require("./routes/attachmentRoutes");
 
 const app = express();
 
@@ -22,6 +25,14 @@ app.use(
   cors({
     credentials: true,
     origin: "*",
+  })
+);
+
+//Uploadthing middleware
+app.use(
+  "/api/uploadthing",
+  createUploadthingExpressHandler({
+    router: uploadRouter,
   })
 );
 
@@ -58,6 +69,7 @@ if (process.env.NODE_ENV === "production") {
 //Global resources
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/chapters", chapterRouter);
+app.use("/api/v1/attachments", attachmentRouter);
 
 // Handle requests from wrong urls
 app.all("*", (req, res, next) => {
