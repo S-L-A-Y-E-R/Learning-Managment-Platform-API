@@ -5,9 +5,12 @@ const {
   updateChapter,
   deleteChapter,
   getOneChapter,
+  reorderChapters,
 } = require("../controllers/chapterController");
 
 const router = express.Router();
+
+router.route("/reorder").patch(reorderChapters);
 
 router.route("/").get(getAllChapters).post(createChapter);
 
