@@ -15,6 +15,7 @@ const courseRouter = require("./routes/courseRoutes");
 const chapterRouter = require("./routes/chapterRoutes");
 const attachmentRouter = require("./routes/attachmentRoutes");
 const progressRouter = require("./routes/progressRoutes");
+const purchaseRouter = require("./routes/purchaseRoutes");
 
 const app = express();
 
@@ -72,6 +73,7 @@ app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/chapters", chapterRouter);
 app.use("/api/v1/attachments", attachmentRouter);
 app.use("/api/v1/progress", progressRouter);
+app.use("/api/v1/purchase", purchaseRouter);
 
 // Handle requests from wrong urls
 app.all("*", (req, res, next) => {
