@@ -17,7 +17,6 @@ const courseSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, "A course must have a description"],
       trim: true,
       maxlength: [
         200,
@@ -26,11 +25,9 @@ const courseSchema = new mongoose.Schema(
     },
     imageUrl: {
       type: String,
-      required: [true, "A course must have an image"],
     },
     price: {
       type: Number,
-      required: [true, "A course must have a price"],
     },
     isPublished: {
       type: Boolean,
@@ -38,7 +35,6 @@ const courseSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: [true, "A course must have a category"],
       enum: [
         "Computer Science",
         "Music",

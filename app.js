@@ -16,6 +16,7 @@ const chapterRouter = require("./routes/chapterRoutes");
 const attachmentRouter = require("./routes/attachmentRoutes");
 const progressRouter = require("./routes/progressRoutes");
 const purchaseRouter = require("./routes/purchaseRoutes");
+const { webhookCheckout } = require("./controllers/purchaseController");
 
 const app = express();
 
@@ -30,6 +31,16 @@ app.use(
   })
 );
 
+//Use morgan logger in the develpment
+if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+
+//We used the webhook checkout here, because it needs a body of type raw not JSON
+app.post(
+  "/webhook-checkout",
+  bodyParser.raw({ type: "application/json" }),
+  webhookCheckout
+);
+
 //Uploadthing middleware
 app.use(
   "/api/uploadthing",
@@ -40,16 +51,6 @@ app.use(
 
 //Set security http headers
 app.use(helmet());
-
-//Use morgan logger in the develpment
-if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
-
-//We used the webhook checkout here, because it needs a body of type raw not JSON
-// app.post(
-//   "/webhook-checkout",
-//   bodyParser.raw({ type: "application/json" }),
-//   webhookCheckout
-// );
 
 //Limit data incoming from the request body
 app.use(express.json());
