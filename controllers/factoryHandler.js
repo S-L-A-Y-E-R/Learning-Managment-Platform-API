@@ -69,13 +69,20 @@ const getOne = (Model, populateOptions) =>
 
 const getAll = (Model) =>
   catchAsync(async (req, res, next) => {
+    const titleRegex = req.query.title
+      ? new RegExp(req.query.title, "i")
+      : /.*/;
     const features = new APIFeatures(Model.find(), req.query)
       .filter()
       .limitFields()
       .paginate()
       .sort();
 
-    const doc = await features.query;
+    let doc = features.query;
+
+    if (req.query.title) doc.find({ title: { $regex: titleRegex } });
+
+    doc = await doc;
 
     res.status(200).json({
       status: "success",

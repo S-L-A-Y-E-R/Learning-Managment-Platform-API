@@ -32,7 +32,6 @@ const courseSchema = new mongoose.Schema(
       type: Number,
       required: [true, "A course must have a price"],
     },
-    purchases: [String],
     isPublished: {
       type: Boolean,
       default: false,
@@ -74,6 +73,20 @@ courseSchema.virtual("chapters", {
   ref: "Chapter",
   foreignField: "courseId",
   localField: "_id",
+  match: { isPublished: true },
+  options: { sort: { position: 1 } },
+});
+
+courseSchema.virtual("attachments", {
+  ref: "Attachment",
+  foreignField: "courseId",
+  localField: "_id",
+});
+
+courseSchema.virtual("purchases", {
+  ref: "Purchase",
+  foreignField: "courseId",
+  localField: "_id",
 });
 
 courseSchema.pre(/^find/, function (next) {
@@ -84,16 +97,17 @@ courseSchema.pre(/^find/, function (next) {
   next();
 });
 
-courseSchema.virtual("attachments", {
-  ref: "Attachment",
-  foreignField: "courseId",
-  localField: "_id",
-});
-
 courseSchema.pre(/^find/, function (next) {
   this.populate({
     path: "attachments",
     select: "name url",
+  });
+  next();
+});
+
+courseSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "purchases",
   });
   next();
 });

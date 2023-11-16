@@ -61,7 +61,7 @@ app.use(mongoSanitize());
 app.use(xssClean());
 
 //Prevent parameter pollution
-app.use(hpp());
+app.use(hpp(["title", "category"]));
 
 //Compress all text sent in the response to the client
 if (process.env.NODE_ENV === "production") {

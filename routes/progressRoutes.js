@@ -1,14 +1,14 @@
 const express = require("express");
 const {
   updateProgress,
-  createProgerss,
+  createOrUpdateProgerss,
   getProgress,
   getAllProgress,
 } = require("../controllers/progressController");
 
 const router = express.Router();
 
-router.route("/").post(createProgerss).get(getAllProgress);
+router.route("/").post(createOrUpdateProgerss).get(getAllProgress);
 
 router.route("/:id").get(getProgress).patch(updateProgress);
 

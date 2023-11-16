@@ -24,24 +24,26 @@ exports.updateChapter = catchAsync(async (req, res, next) => {
     }
   );
 
-  const existingMuxData = await Mux.findOne({ chapterId: req.params.id });
+  if (req.body.videoUrl) {
+    const existingMuxData = await Mux.findOne({ chapterId: req.params.id });
 
-  if (existingMuxData) {
-    await Video.Assets.del(existingMuxData.assetId);
-    await Mux.findByIdAndDelete(existingMuxData._id);
+    if (existingMuxData) {
+      await Video.Assets.del(existingMuxData.assetId);
+      await Mux.findByIdAndDelete(existingMuxData._id);
+    }
+
+    const asset = await Video.Assets.create({
+      input: req.body.videoUrl,
+      playback_policy: "public",
+      test: false,
+    });
+    console.log(asset);
+    await Mux.create({
+      assetId: asset.id,
+      playbackId: asset.playback_ids[0].id,
+      chapterId: req.params.id,
+    });
   }
-
-  const asset = await Video.Assets.create({
-    input: req.body.videoUrl,
-    playback_policy: "public",
-    test: false,
-  });
-
-  await Mux.create({
-    assetId: asset.data.id,
-    playbackId: asset.data.playback_ids[0].id,
-    chapterId: req.params.id,
-  });
 
   res.status(200).json({
     status: "success",
@@ -68,12 +70,17 @@ exports.deleteChapter = catchAsync(async (req, res, next) => {
 });
 
 exports.reorderChapters = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const { chapters } = req.body;
 
   for (const chapter of chapters) {
-    await Chapter.findByIdAndUpdate(chapter._id, {
-      position: chapter.position,
-    });
+    await Chapter.findByIdAndUpdate(
+      chapter.id,
+      {
+        position: chapter.position,
+      },
+      { new: true }
+    );
   }
 
   res.status(200).json({
